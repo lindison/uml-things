@@ -1,0 +1,24 @@
+@startuml
+title Ansible 101: module 01
+actor instructor #yellow
+box "demo" #LightRed
+  participant Instructor
+  participant ACS
+end box
+
+
+Instructor -> ACS: ssh acs server
+ACS -> apt: install Ansible
+ACS -> Ansible: ad-hoc Command
+Ansible -> Play: -m ping
+group Playbook
+  Ansible -> Play
+else Play failed
+  Ansible ->x Play
+end
+
+ACS -> hosts: update host file
+ACS -> ansible.cfg: update ansible.cfg file
+
+
+@enduml

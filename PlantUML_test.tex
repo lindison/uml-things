@@ -1,0 +1,55 @@
+@startuml
+title automated log archive
+actor Developer #yellow
+database Git
+control Ansible
+boundary Application
+box "alerting"
+  participant Splunk
+end box
+
+box "remidiate"
+  participant Rundeck #LightBlue
+end box
+
+autonumber
+
+== Alert ==
+
+Application ->o Splunk: Logs Full
+Splunk ->o Developer : Splunk Alert
+Developer ->o Splunk : Awk Splunk Alert
+
+== Respond ==
+
+Developer ->o Rundeck: Start Rundeck Job
+
+== Remidiate ==
+Rundeck ->o Ansible: Remidiate server
+Ansible ->o Ansible: Check Playbook
+database Git
+control Ansible
+Ansible ->o Git: Get Playbook
+Git ->o Ansible: Playbook-latest
+Ansible ->o Application: Archive logs
+
+group Playbook success
+
+  Application -> Ansible: logs archived
+
+else Playbook fail
+
+  Application -> Ansible: archive failed
+end
+
+loop retry
+  Ansible -> Application: archive logs
+
+end
+Ansible ->o Application: Create new logs
+note right: System creates new logs
+boundary Application
+== notify ==
+Application ->o Ansible: Playbook completed
+Ansible ->o Developer: Logs archived *notify*
+@enduml
