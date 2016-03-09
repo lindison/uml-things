@@ -1,0 +1,25 @@
+@startuml
+title RollingUpdates-Rollback
+legend right
+  frontend = ReplicationController
+  v1 = old ReplicationController
+  v2 = new ReplicationController
+endlegend
+
+autonumber
+kubectl ->o rolling_update: kubectl rolling-update
+rolling_update ->o frontendv2: create frontendv2
+frontendv2 ->o namespace: existing namespace
+rolling_update ->o frontendv1: delete frontendv1
+
+group abort update
+  frontendv2 ->x Pods: update
+  Pods ->o kubectl: success
+  group rollback
+    kubectl ->o frontendv2: delete frontendv2
+    kubectl ->o frontendv1: create frontendv1
+    frontendv1 ->o pods: run rollback
+    end
+end
+
+@enduml

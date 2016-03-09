@@ -1,0 +1,16 @@
+@startuml
+Title Ansible 101: Ad-Hoc commands
+(*)  --> "run ad-hoc ansible command"
+If "input is verbose" then
+--> [Yes] "-v"
+--> "login"
+--> "run command"
+If "input is playbook" then
+--> [playbook] "-playbook"
+--> "execute"
+--> "ssh"
+else
+--> [No] "run command"
+Endif
+-->(*)
+@enduml

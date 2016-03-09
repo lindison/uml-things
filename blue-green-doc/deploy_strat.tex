@@ -1,0 +1,18 @@
+@startuml
+title RollingUpdates
+legend right
+  frontend = ReplicationController
+  v1 = old ReplicationController
+  v2 = new ReplicationController
+endlegend
+
+autonumber
+kubectl ->o rolling_update: kubectl rolling-update
+rolling_update ->o frontendv2: create frontendv2
+new_rc ->o namespace: connect to existing namespace
+rolling_update ->o frontendv1: delete frontendv1
+frontendv2 ->o pods: update pods
+pods ->o frontendv2: success
+frontendv2 ->o kubectl: successful update
+
+@enduml

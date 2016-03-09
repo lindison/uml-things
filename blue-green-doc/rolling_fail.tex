@@ -1,0 +1,25 @@
+@startuml
+title RollingUpdates-Recovery
+legend right
+  frontend = ReplicationController
+  v1 = old ReplicationController
+  v2 = new ReplicationController
+endlegend
+
+autonumber
+kubectl ->o rolling_update: kubectl rolling-update
+rolling_update ->o frontendv2: create frontendv2
+frontendv2 ->o namespace: connect to existing namespace
+rolling_update ->o frontendv1: delete frontendv1
+
+group success
+  frontendv2 ->o Pods: update
+  Pods ->o kubectl: success
+  group frontendv2 failed
+    frontendv2 ->x Pods: terminated
+    frontendv2 ->o kubectl
+    kubectl ->o frontendv2: rerun rolling-update
+    end
+end
+
+@enduml
