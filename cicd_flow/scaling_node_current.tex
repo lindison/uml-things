@@ -1,0 +1,22 @@
+@startuml
+Title: Scaling a node, current process
+
+actor Operator
+
+autonumber
+
+Operator ->o CliQrGUI
+CliQrGUI ->o Rerun
+note left: CliQrApp
+Rerun ->o ScaledNode
+note left: common-init
+Rerun ->o ScaledNode
+note left: bias
+Rerun ->o ScaledNode
+note left: app modules
+ScaledNode ->o Operator
+Operator ->o Rerun
+note right: f5-icontrol
+
+
+@enduml

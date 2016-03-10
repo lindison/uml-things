@@ -1,0 +1,22 @@
+@startuml
+title Application Server Restart Automated Process
+actor Operator
+
+HipChatBot ->o Rundeck
+group retrive passwords
+  Rundeck <-> CyberArk
+end
+Rundeck ->o Ansible
+group Restart Playbook
+  Ansible ->o AppServer
+  AppServer ->o AppServer: restart
+  AppServer ->o Ansible
+end
+Ansible ->o Rundeck
+group notify over HipChat
+  Rundeck ->o HipChat
+  HipChat ->o Operator
+end
+
+
+@enduml

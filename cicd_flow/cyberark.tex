@@ -1,0 +1,19 @@
+@startuml
+title CyberArk
+actor Operator
+
+Operator ->o Rundeck
+group check passwords
+  Rundeck ->o CyberArk_AIM_API: check for passwords
+  database CyberArk_Passwords
+  CyberArk_AIM_API ->o CyberArk_Passwords: check passwords
+  CyberArk_Passwords ->o CyberArk_AIM_API: stored passwords
+else no passwords
+  CyberArk_Passwords ->o CyberArk_AIM_API
+  CyberArk_AIM_API ->x Alert: no stored passwords
+  CyberArk_AIM_API ->o Rundeck: no passwords
+end
+Alert -> Operator
+
+
+@enduml

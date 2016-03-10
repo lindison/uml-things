@@ -1,0 +1,17 @@
+@startuml
+title Jenkins Example
+actor Operator
+
+SoftwareVersion ->o Splunk: wrong app version
+Splunk ->o Jenkins: Alert Jenkins
+group Jenkins update job
+  Jenkins ->o App_Update_Job: Update Job
+  App_Update_Job ->o AppServer: Update App
+  AppServer ->o App_Update_Job: App Updated
+  App_Update_Job ->o Jenkins: Success
+end
+group notify HipChat
+  Jenkins ->o HipChat: App Updated
+  HipChat ->o Operator
+end
+@enduml

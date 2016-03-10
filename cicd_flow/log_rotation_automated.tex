@@ -1,0 +1,20 @@
+@startuml
+
+title Log Rotation Automated Process
+
+actor Operator
+
+Splunk ->o Rundeck
+Rundeck ->o HipChat
+group passwords
+  Rundeck o<->o CyberArk: retrieve passwords
+end
+Rundeck ->o Ansible
+group ansible playbook
+  Ansbile ->o AppServer: archive logs
+  Ansible ->o AppServer: new logs
+end
+AppServer ->o HipChat: posts successful log roll
+HipChat ->o Operator: Operator is notified
+
+@enduml

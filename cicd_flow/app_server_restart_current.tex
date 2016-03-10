@@ -1,0 +1,15 @@
+@startuml
+
+title Application Server Restart Current Process
+actor Operator
+
+Notification ->o Operator: app needs restart
+Operator ->o Ansible
+group Restart Playbook
+  Ansible ->o AppServer
+  AppServer ->o AppServer: Restart
+  AppServer ->o Ansible: Restarted
+end
+Operator ->o JIRA: update JIRA ticket
+
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+
+title Log Rotation Current Process
+
+actor Operator
+
+Splunk ->o Operator: ALERT, LOGS FULL
+Operator <-> Splunk: Awknowledge Alert
+Operator ->o Ansible
+group ansible playbook
+  Ansbile ->o AppServer: archive logs
+  Ansible ->o AppServer: new logs
+end
+AppServer ->o Operator
+Operator ->o HipChat: post message about remidiation 
+
+@enduml

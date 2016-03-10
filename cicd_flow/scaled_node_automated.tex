@@ -1,0 +1,48 @@
+@startuml
+Title: Scaling a node, automated process
+
+actor Operator
+
+
+Operator ->o Splunk
+group no need to scale
+  Splunk -> Operator
+end
+Splunk ->o Rundeck
+note left: Need to Scale
+Rundeck ->o CyberArk
+note right: app passwords
+CyberArk ->o Rundeck
+Rundeck ->o CliQrAPI
+note left: CliQrApp
+group build server, install app
+  Rerun ->o ScaledNode
+  note left: commont-init
+  Rerun ->o ScaledNode
+  note left: bias
+  Rerun ->o ScaledNode
+  note left: app modules
+end
+Rundeck ->o Jenkins
+Jenkins ->o Nexus
+note right: artifacts
+Nexus ->o ScaledNode
+note right: rpms
+ScaledNode ->o Rundeck
+Rundeck ->o Ansible
+Ansible ->o Rerun
+note right: f5 add playbook
+note left: f5-icontrol module
+group successful scale
+  ScaledNode ->o HipChat
+  HipChat ->o Operator
+else Scale failed
+  ScaledNode ->x Splunk
+  ScaledNode ->o HipChat
+  HipChat ->o Operator
+end
+
+
+
+
+@enduml
