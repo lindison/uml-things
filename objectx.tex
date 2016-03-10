@@ -1,0 +1,38 @@
+@startuml
+
+class DockerImage
+
+package "kubernetes" <<Cloud>> {
+  rc <-- image
+}
+
+package "node1" <<Node>> {
+  pod1 <--> rc
+}
+
+package "node2" <<Node>> {
+  pod2 <--> rc
+}
+
+package "node3" <<Node>> {
+  pod3 <--> rc
+}
+
+package "registry" <<Database>> #DDDDDD {
+  image <-- version1
+  image <-- version2
+  image <-- version3
+  .DockerImage o-- image
+}
+
+package Git <<Database>> #DDDDDD {
+  qa --> version3
+  dev --> qa
+}
+
+package  development {
+  developer --> dev
+}
+
+
+@enduml

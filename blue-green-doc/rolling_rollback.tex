@@ -1,13 +1,9 @@
 @startuml
 title RollingUpdates-Rollback
-legend right
-  frontend = ReplicationController
-  v1 = old ReplicationController
-  v2 = new ReplicationController
-endlegend
 
 autonumber
 kubectl ->o rolling_update: kubectl rolling-update
+note right: kubectl rolling-update frontendv1 frontendv2 --image=app_v2 | -f frontendv2.yml --rollback
 rolling_update ->o frontendv2: create frontendv2
 frontendv2 ->o namespace: existing namespace
 rolling_update ->o frontendv1: delete frontendv1
