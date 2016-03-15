@@ -1,0 +1,12 @@
+@startuml
+(*) --> "Traffic Flow"
+
+if "" then
+  -->[90%] "legacy"
+  -right-> (*)
+else
+  ->[10%] "test"
+  -->[smoke_test] (*)
+endif
+
+@enduml

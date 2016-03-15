@@ -9,9 +9,9 @@ group check passwords
   CyberArk_AIM_API ->o CyberArk_Passwords: check passwords
   CyberArk_Passwords ->o CyberArk_AIM_API: stored passwords
 else no passwords
-  CyberArk_Passwords ->o CyberArk_AIM_API
-  CyberArk_AIM_API ->x Alert: no stored passwords
-  CyberArk_AIM_API ->o Rundeck: no passwords
+  CyberArk_Passwords ->o CyberArk_AIM_API: no passwords
+  CyberArk_AIM_API ->x Alert: alert "no passwords"
+  Alert ->o Rundeck: no passwords
 end
 Alert -> Operator
 

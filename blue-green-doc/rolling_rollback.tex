@@ -2,18 +2,18 @@
 title RollingUpdates-Rollback
 
 autonumber
-kubectl ->o rolling_update: kubectl rolling-update
-note right: kubectl rolling-update frontendv1 frontendv2 --image=app_v2 | -f frontendv2.yml --rollback
-rolling_update ->o frontendv2: create frontendv2
-frontendv2 ->o namespace: existing namespace
-rolling_update ->o frontendv1: delete frontendv1
+kubectl -> rolling_update: kubectl rolling-update
+note right: kubectl rolling-update frontendv1 frontendv2 -f frontendv2.yml --rollback
+rolling_update -> frontendv2: create frontendv2
+frontendv2 -> namespace: existing namespace
+rolling_update -> frontendv1: delete frontendv1
 
 group abort update
   frontendv2 ->x Pods: update
-  Pods ->o kubectl: success
+  Pods -> kubectl: success
   group rollback
-    kubectl ->o frontendv2: delete frontendv2
-    kubectl ->o frontendv1: create frontendv1
+    kubectl -> frontendv2: delete frontendv2
+    kubectl -> frontendv1: create frontendv1
     frontendv1 ->o pods: run rollback
     end
 end

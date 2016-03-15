@@ -1,0 +1,28 @@
+@startuml
+title Recreate
+
+kubectl -> recreate: kubectl recreate
+create -> frontendv1: destroy old pods
+frontendv1 -> legacu_pods: destroy pods
+frontendv1 -> frontendv2: create pods
+frontendv2 -> new_pods: deploy pods
+group rollback
+  kubectl -> recreate: initiate rollback
+  recreate -> frontendv2: rollback
+  frontendv2 ->o new_pods: destroy new pods
+  recreate -> frontendv1: recreate pods
+  frontendv1 -> legacy_pods: deploy pods
+  legacy_pods -> kubectl: rollback complete
+end
+
+box "new rc and pods" #b4f985
+  participant frontendv2
+  participant new_pods
+end box
+
+box "legacy rc and pods" #adb1f4
+  participant frontendv1
+  participant old_pods
+end box
+
+@enduml

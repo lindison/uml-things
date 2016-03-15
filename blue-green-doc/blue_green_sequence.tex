@@ -1,0 +1,31 @@
+@startuml
+
+title Kubernetes Traffic Shift
+
+actor Operator
+
+[service]
+[frontendv1]
+[frontendv2]
+[pod1]
+[pod2]
+[pod3]
+[pod4]
+[replication_controllerv1]
+[replication_controllerv2]
+
+[service] --> [frontendv1]
+note left: version 1.0
+[service] --> [frontendv2]
+note right: version 1.1
+[frontendv1] --> [pod1]
+[frontendv1] --> [pod2]
+[frontendv2] --> [pod3]
+[frontendv2] --> [pod4]
+[replication_controllerv1] -> [pod1]
+[replication_controllerv1] -> [pod2]
+[replication_controllerv2] -> [pod3]
+[replication_controllerv2] -> [pod4]
+
+
+@enduml

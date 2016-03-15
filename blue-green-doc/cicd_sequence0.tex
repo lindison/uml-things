@@ -1,0 +1,70 @@
+@startuml
+actor "CI Eng"
+actor "AS Developer"
+
+== Define CliQr App ==
+
+"AS Developer" -> cliQr : build test and export app ontology
+"AS Developer" -> "git/svn" : cliQr app definition
+"AS Developer" -> "git/svn" : check in  *-env-conf
+
+"AS Developer" -> "git/svn" : create application deployment scripts this will goto nexus
+"AS Developer" -> "git/svn" : check in code
+"git/svn" -> Jenkins : there are new changes
+actor "PI QA"
+
+==AS Automated Build ==
+activate Jenkins
+Jenkins -> JenkinsBuild :  update from git/svn execute build (ant/maven)
+JenkinsBuild ->Jenkins : build complete
+Jenkins -> JenkinsBuild : junit
+JenkinsBuild -> Jenkins: test results
+alt test results failed
+Jenkins -> "AS Developer" : build failed
+end
+Jenkins -> Nexus : send to repo (AS.war | currently sent to svn)
+== APPLICATION DEPLOYMENT ==
+
+== Create Domain ==
+"PI QA" -> Jenkins : deploy PI build
+
+Jenkins -> reRun :  install AS pi
+reRun -> Nexus : retrieve Pi deploy config
+Nexus -> reRun : deploy config artifact as-pi-env-conf
+
+reRun -> Cliqr : check if domain is running (as-pi-env-conf.domainname)
+Cliqr -> reRun : domain_status
+alt domain_status is not running
+    reRun -> Cliqr : launch base-fmw-domain with name as-pi-env-conf.domainname
+    Cliqr -> Cloud : launch Necessary Nodes
+    Cloud->CloudVM : create
+    CloudVM -> Nexus : on init get reRun:domainCreation
+    CloudVM->"reRun:domainCreation" : run andrii and freds domain creation scripts
+    "reRun:domainCreation"  -> sharedStorage : fmw.properties
+end
+== Application  ==
+
+reRun -> Cliqr: start (appid for AS as-pi-env-conf.appid)
+
+activate Cliqr
+Cliqr -> Cloud : build deployment infrastructure
+Cloud -> CloudVM : build
+Cloud -> Cliqr : infrastructure built (CloudVM)
+activate CloudVM
+Cliqr -> CloudVM : execute init script (cloud init to join domain etc)
+CloudVM -> Nexus : get application deployment scripts
+Nexus -> CloudVM : install application deployment scripts
+activate CiScript
+CloudVM -> "application deployment scripts" : install
+"application deployment scripts" ->  Nexus : get AS War
+Nexus -> "application deployment scripts" : AS.war and App configs,etc
+"application deployment scripts" -> AdminNode : wlst deploy AS.war
+"application deployment scripts" -> AdminNode : deploy configuration?
+Jenkins -> Lisa : execute smoke test tests
+Lisa -> Spira : update test results
+"application deployment scripts" -> "AS Cluster" : customize and restart managed servers
+
+
+deactivate CloudNodes
+deactivate Cliqr
+@enduml
