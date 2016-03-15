@@ -1,0 +1,64 @@
+@startuml
+
+artifact nova_metadata
+artifact aim_id
+artifact cinder_metadata
+artifact neutron_metadata
+artifact keystone_metadata
+node nova_instance
+storage cinder_volume1
+storage cinder_volume2
+actor user
+actor admin
+folder nas_share
+component compute_node
+frame BRSrecord
+cloud openstack1
+database brs_db
+storage NetApp
+component cinder
+component nova
+component neutron
+component keystone
+agent OS
+agent RAM
+agent CPU
+
+node BRS {
+ cloud openstack
+}
+
+brs_db == BRS
+neutron ~~ nova_instance
+neutron -- neutron_metadata
+cinder -- openstack1
+nova -- openstack1
+neutron -- openstack1
+keystone -- openstack1
+cinder_metadata == BRSrecord
+nova_metadata == BRSrecord
+cinder_metadata .. cinder_volume2
+cinder_metadata .. cinder_volume1
+keystone_metadata == BRSrecord
+neutron_metadata == BRSrecord
+nova_metadata .. nova_instance
+nova_instance == nova
+OS ~~ nova_instance
+nova == compute_node
+nova_instance ~~ cinder_volume2
+nova_instance ~~ cinder_volume1
+cinder_volume2 -- cinder
+cinder_volume1 -- cinder
+cinder == nas_share
+nas_share == NetApp
+BRSrecord ->> brs_db
+aim_id == BRSrecord
+user == BRSrecord
+admin == BRSrecord
+OS == BRSrecord
+RAM == BRSrecord
+CPU == BRSrecord
+
+
+
+@enduml
