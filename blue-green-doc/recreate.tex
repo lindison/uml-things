@@ -1,6 +1,7 @@
 @startuml
 title Recreate
 
+autonumber
 kubectl -> recreate: kubectl recreate
 create -> frontendv1: destroy old pods
 frontendv1 -> legacu_pods: destroy pods

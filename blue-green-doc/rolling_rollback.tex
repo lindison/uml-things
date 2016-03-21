@@ -1,20 +1,21 @@
 @startuml
 title RollingUpdates-Rollback
 
-autonumber
 kubectl -> rolling_update: kubectl rolling-update
-note right: kubectl rolling-update frontendv1 frontendv2 -f frontendv2.yml --rollback
+note right: kubectl rolling-update frontendv1 frontendv2 -f frontendv2.yml
 rolling_update -> frontendv2: create frontendv2
 frontendv2 -> namespace: existing namespace
 rolling_update -> frontendv1: delete frontendv1
 
+autonumber 5
 group abort update
-  frontendv2 ->x Pods: update
-  Pods -> kubectl: success
+  frontendv2 ->x New_Pods: update
+  Pods -> kubectl: aborted
   group rollback
     kubectl -> frontendv2: delete frontendv2
+    note right: <w:#fa7070> kubectl rolling-update frontendv1 frontendv2 -f frontendv2.yml --rollback </w>
     kubectl -> frontendv1: create frontendv1
-    frontendv1 ->o pods: run rollback
+    frontendv1 ->o Legacy_Pods: run rollback
     end
 end
 
