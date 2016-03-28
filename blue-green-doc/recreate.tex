@@ -2,28 +2,29 @@
 title Recreate
 
 autonumber
-kubectl -> recreate: kubectl recreate
-create -> frontendv1: destroy old pods
-frontendv1 -> legacu_pods: destroy pods
-frontendv1 -> frontendv2: create pods
-frontendv2 -> new_pods: deploy pods
+DeploymentAPI -> recreate: recreate
+recreate -> frontendv1: destroy old pods
+frontendv1 -> legacy_pods: destroy pods
+frontendv1 -> DeploymentAPI: pods destroyed
+DeploymentAPI -> frontendv2: create pods
+frontendv2 -> updated_pods: deploy pods
 group rollback
-  kubectl -> recreate: initiate rollback
+  DeploymentAPI -> recreate: initiate rollback
   recreate -> frontendv2: rollback
-  frontendv2 ->o new_pods: destroy new pods
+  frontendv2 ->o updated_pods: destroy new pods
   recreate -> frontendv1: recreate pods
   frontendv1 -> legacy_pods: deploy pods
-  legacy_pods -> kubectl: rollback complete
+  legacy_pods -> DeploymentAPI: rollback complete
 end
 
 box "new rc and pods" #b4f985
   participant frontendv2
-  participant new_pods
+  participant updated_pods
 end box
 
 box "legacy rc and pods" #adb1f4
   participant frontendv1
-  participant old_pods
+  participant legacy_pods
 end box
 
 @enduml

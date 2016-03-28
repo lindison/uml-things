@@ -2,28 +2,30 @@
 
 title CICD Flow
 
-actor Operator
+actor OperatorDev
 
 autonumber
 Group Build
-  Operator -> Code
-  Code -> Git
-  Git -> Nexus
-  Operator -> ConfigMgr
-  Operator -> CliQrApp
-  Operator -> JenkinsJob
-  Operator -> SmokeTest
+  OperatorDev -> Code: write code
+  Code -> Git: commit code
+  Git -> Nexus: create rpms
+  OperatorDev -> CliQrApp: create CliQrApp
+  OperatorDev -> ConfigMgr: create config
+  OperatorDev -> JenkinsJob: create Jenkins job
+  OperatorDev -> SmokeTest: run smoke tests
 End
 
-Group Deploy
-  Operator -> JenkinsJob
-  JenkinsJob -> Rerun: rerun cliqrapp
-  Rerun -> CliQrApp: <app_id>
-  CliQrApp -> VMware
-  CliQrApp -> Rerun: common-init, app-rerun modules
-  CliQrApp -> Nexus: rpm installs
+Group Deploy Phase
+  OperatorDev -> JenkinsJob: execute Jenkins job
+  JenkinsJob -> Rerun: rerun cliqrapp: start
+  Rerun -> CliQrApp: run cliqrapp id
+  Group App Deploy
+    CliQrApp -> VMware: deploy VM
+    VMware -> Rerun: common-init
+    CliQrApp <-> Nexus: rpm installs
+  End
+  CliQrApp -> OperatorDev
 End
-
 
 
 @enduml

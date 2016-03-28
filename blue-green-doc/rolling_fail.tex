@@ -2,19 +2,18 @@
 title RollingUpdates-Recovery
 
 autonumber
-kubectl -> rolling_update: kubectl rolling-update
-note right: kubectl rolling-update frontendv1 frontendv2 --image=app_v2 | -f frontendv2.yml
+DeploymentAPI -> rolling_update: rolling-update
 rolling_update -> frontendv2: create frontendv2
-frontendv2 -> namespace: connect to existing namespace
+frontendv2 -> label: connect to existing label
 rolling_update -> frontendv1: delete frontendv1
 
 group success
   frontendv2 -> Pods: update
-  Pods -> kubectl: success
+  Pods -> DeploymentAPI: success
   group frontendv2 failed
     frontendv2 ->x Pods: terminated
-    frontendv2 -> kubectl
-    kubectl -> frontendv2: rerun rolling-update
+    frontendv2 -> DeploymentAPI
+    DeploymentAPI -> frontendv2: rerun rolling-update
     end
 end
 

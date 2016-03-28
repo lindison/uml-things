@@ -1,17 +1,17 @@
 @startuml
-title Traffic Shift
+title BlueGreen (Traffic Shift)
 
 autonumber
-kubectl -> traffic_shift: kubectl traffic shift
-traffic_shift -> frontendv2: create frontendv2
+DeploymentAPI -> BlueGreen: start deployment
+BlueGreen -> frontendv2: create frontendv2
 frontendv2 -> updated_pods: deploy pods
-new_pods -> label_query: reroute traffic
-new_pods ->o kubectl: successful update
-group rollback
-  kubectl -> label_query: initiate rollback
+updated_pods -> label_query: reroute traffic
+label_query ->o DeploymentAPI: successful update
+group fail-back
+  DeploymentAPI -> label_query: initiate rollback
   label_query -> frontendv1: route trafic to legacy
   frontendv1 -> legacy_pods: traffic routed
-  legacy_pods -> kubectl: rollback complete
+  legacy_pods -> DeploymentAPI: rollback complete
 end
 
 box "update rc and pods" #b4f985
