@@ -1,0 +1,29 @@
+@startuml
+
+title CICD Flow
+
+actor Operator
+
+autonumber
+Group Build
+  Operator -> Code
+  Code -> Git
+  Git -> Nexus
+  Operator -> ConfigMgr
+  Operator -> CliQrApp
+  Operator -> JenkinsJob
+  Operator -> SmokeTest
+End
+
+Group Deploy
+  Operator -> JenkinsJob
+  JenkinsJob -> Rerun: rerun cliqrapp
+  Rerun -> CliQrApp: <app_id>
+  CliQrApp -> VMware
+  CliQrApp -> Rerun: common-init, app-rerun modules
+  CliQrApp -> Nexus: rpm installs
+End
+
+
+
+@enduml
