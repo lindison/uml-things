@@ -1,0 +1,25 @@
+@startuml
+
+title: ansible flow
+
+actor human
+
+human -> ansible
+ansible -> ansible_play
+ansible_play -> modules
+ansible_play -> vars
+vars -> modules
+modules -> python
+python -> ssh
+ssh -> target
+ssh -> copy_modules
+target -> copy_modules
+copy_modules -> execute_work
+execute_work -> copy_modules
+copy_modules -> delete_modules
+delete_modules -> ssh
+ssh -> python
+python -> ansible
+ansible -> human
+
+@enduml

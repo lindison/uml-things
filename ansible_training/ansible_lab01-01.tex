@@ -1,0 +1,17 @@
+@startuml
+Title: Install Ansible
+actor student
+
+autonumber
+
+group Install Ansible
+  student -> dependencies
+  dependencies -> student: python, Internet
+  student -> add_apt_repo: ppa: ansible
+  student -> apt_update: apt-get update
+  student -> apt_install: apt-get install
+  student -> test_ansible: ansible --version
+  test_ansible -> student: success
+end group
+
+@enduml

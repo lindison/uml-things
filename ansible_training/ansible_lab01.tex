@@ -1,0 +1,32 @@
+@startuml
+Title: Ansible, Module 01, Lab
+
+actor student
+
+autonumber
+group Install Ansible
+  student <-> apt: check dependencies
+  student <-> apt: ppa: ansible
+  student <-> apt: repo update
+  student <-> apt: ansible install
+  student <-> ansible: ansible --version
+  ansible <-> student: success
+end group
+group Test Ansible
+  student <-> ansible: ansible --version
+  student <-> ansible: display ansible-doc
+  student <-> ansible: review ping module
+  student <-> ansible: define quick hosts (localhost)
+  student <-> ansible: list hosts
+  student -x ansible: use ansible ping module
+  student <-> localhost: ssh localhost, add fingerprint
+  student <-> ansible: use ping module (define user, prompt password)
+end group
+group ssh configure
+  student <-> localhost: Generate ssh key
+  student <-> localhost: Copy ssh key to remote host
+  student <-> localhost: ssh localhost (no password)
+  student <-> ansible: use ansible ping module
+  ansible <-> student: successful ping
+end group
+@enduml

@@ -2,13 +2,12 @@
 title BlueGreen (Traffic Shift)
 
 autonumber
-DeploymentAPI -> BlueGreen: start deployment
 BlueGreen -> frontendv2: create frontendv2
 frontendv2 -> updated_pods: deploy pods
 updated_pods -> label_query: reroute traffic
 label_query ->o DeploymentAPI: successful update
 group fail-back
-  DeploymentAPI -> label_query: initiate rollback
+  BlueGreen -> label_query: initiate rollback
   label_query -> frontendv1: route trafic to legacy
   frontendv1 -> legacy_pods: traffic routed
   legacy_pods -> DeploymentAPI: rollback complete
