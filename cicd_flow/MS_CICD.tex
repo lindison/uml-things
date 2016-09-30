@@ -1,0 +1,31 @@
+@startuml
+
+title Example CICD Flow
+
+actor OperatorDev
+
+autonumber
+Group Build
+  Develop -> Code: write code
+  Code -> SCM: commit code
+  SCM -> Artifacts: create binaries
+  OperatorDev -> Azure: create Azure App
+  OperatorDev -> ConfigMgr: create config
+  OperatorDev -> JenkinsJob: create Jenkins job
+  OperatorDev -> SmokeTest: run smoke tests
+End
+
+Group Deploy Phase
+  OperatorDev -> JenkinsJob: execute Jenkins job
+  JenkinsJob -> TFS: run Azure app
+  Rerun -> CliQrApp: run cliqrapp id
+  Group App Deploy
+    CliQrApp -> VMware: deploy VM
+    VMware -> Rerun: common-init
+    CliQrApp <-> Nexus: rpm installs
+  End
+  CliQrApp -> OperatorDSV
+End
+
+
+@enduml

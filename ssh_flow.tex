@@ -1,0 +1,38 @@
+@startuml
+Title: SSH FLOW
+
+autonumber
+
+  Client -> Server: Initiate SSH Connection
+group SSH Flow (Part 1)
+  Client -> Server: "hello"
+  Client <- Server: protocols supported
+  Client -> Server: session key
+  Client -> Server: "sounds good"
+  Client <-> Server: Large Prime Number
+  Client <-> Server: Encryption Generation
+  Client <-> Server: Generate Secret Prime
+  Client <-> Server: Generate Public Prime
+  Client <-> Server: Share Public Primes
+  Client <-> Server: Use Secret Prime and Public Prime to generate Shared Secret key
+end group
+  Client <-> Server: Use Shared Secret Key to encrypt all communication that follows
+
+group Authenticating User Access (Part 2)
+  group Password Access
+  Client <- Server: "None shall pass! Unless you have a passowrd!"
+  Client -> Server: "supersecretpassword"
+  Server -> Server: Check Password
+  end group
+  group SSH Key Pair Access
+  Client -> Server: This is my ID for my public SSH Key
+  Server -> Server: Check authorized_keys
+  Server -> Server: If matching, generate a random number
+  Server -> Client: Encrypt random number with public SSH key
+  Client -> Server: Decrypt number, send MD5 Hash of number
+  Server -> Server: Decrypt original number, compare MD5 hashes
+  end group
+  Server -> Client: Provide Access/Deny Acces
+end group
+
+@enduml
